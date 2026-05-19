@@ -33,4 +33,8 @@ class Device extends Model
     return $this->hasOne(DeviceAssignmentHistory::class)
         ->where('status', 1);
     }
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

@@ -15,6 +15,7 @@ class Ticket extends Model
         'user_id',
         'device_id',
         'status',
+        'type',      
     ];
 
     public function user()
@@ -25,5 +26,10 @@ class Ticket extends Model
     public function device()
     {
         return $this->belongsTo(Device::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(TicketFile::class);
     }
 }

@@ -14,6 +14,9 @@ Route::get('users/{user}/devices', [UserController::class, 'devices']);
 Route::get('users/{user}', [UserController::class, 'show']);
 Route::put('users/{user}', [UserController::class, 'update']);
 Route::put('users/{user}/status', [UserController::class, 'updateStatus']);
+Route::get('users/{user}/tickets/{device}/devices', [UserController::class, 'myTickets']); //ticket y estado de user
+
+
 
 Route::patch('users/{user}', [UserController::class, 'update']);
 Route::post('users/{user}/change-password', [UserController::class, 'changePassword']);

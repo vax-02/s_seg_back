@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Device;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -178,5 +179,14 @@ class UserController extends Controller
             ->get();
 
         return response()->json($users);
+    }
+
+    public function myTickets(User $user,Device $device ): JsonResponse
+    {
+        $tickets = $user->tickets()
+            ->where('device_id', $device->id)
+            ->with('device:id')->orderBy('created_at', 'desc')
+            ->get();
+        return response()->json($tickets);
     }
 }

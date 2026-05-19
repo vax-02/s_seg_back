@@ -58,4 +58,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(DeviceAssignmentHistory::class);
     }
+    public function tickets(){
+        return $this->hasMany(Ticket::class);
+    }
 }

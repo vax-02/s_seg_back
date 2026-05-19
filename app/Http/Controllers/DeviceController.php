@@ -12,7 +12,6 @@ class DeviceController extends Controller
     public function index(): JsonResponse
     {
         $devices = Device::with('currentAssignment.user')->get();
-
         return response()->json($devices);
     }
 
