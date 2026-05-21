@@ -58,7 +58,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(DeviceAssignmentHistory::class);
     }
-    public function tickets(){
+    public function tickets()
+    {
         return $this->hasMany(Ticket::class);
+    }
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'assigned_user_id');
     }
 }

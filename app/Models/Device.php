@@ -10,7 +10,7 @@ class Device extends Model
     use HasFactory;
 
     protected $fillable = [
-        'type',
+        'type_device_id',
         'brand',
         'model',
         'status',

@@ -17,8 +17,9 @@ class DeviceController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+
         $validated = $request->validate([
-            'type' => ['required', 'string', 'max:100'],
+            'type_device_id' => ['required', 'exists:type_devices,id'],
             'brand' => ['required', 'string', 'max:100'],
             'model' => ['required', 'string', 'max:100'],
         ]);

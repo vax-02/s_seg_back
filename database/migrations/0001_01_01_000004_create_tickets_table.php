@@ -18,6 +18,12 @@ return new class extends Migration
             $table->tinyInteger('type')->default(1); 
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('device_id')->constrained('devices')->cascadeOnDelete();
+
+             $table->foreignId('assigned_user_id')
+              ->nullable()
+              ->constrained('users')
+              ->nullOnDelete();
+              
             $table->tinyInteger('status')->default(1); //1 solicitado //2 aceptado //3 en el tecnico //4 resuelto //5 cerrado
             $table->timestamps();
         });

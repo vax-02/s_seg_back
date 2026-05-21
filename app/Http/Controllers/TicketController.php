@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Ticket;
 use App\Models\TicketFile;
 use Illuminate\Http\JsonResponse;
@@ -16,6 +17,18 @@ class TicketController extends Controller
         return response()->json(Ticket::with(['user', 'device', 'files'])->get());
     }
 
+    public function getTicketAccepted(){
+        return response()->json(
+            Ticket::with([
+                'user',
+                'assignedUser',
+                'device',
+                'files'
+            ])
+                ->where('status','>', 1)
+                ->get()
+            );
+    }
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -38,7 +51,7 @@ class TicketController extends Controller
             foreach ($files as $file) {
                 // Validación adicional
                 $mimeType = $file->getMimeType();
-                $allowedMimes = ['application/pdf', 'image/jpeg', 'image/png'];
+                $allowedMimes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
                 if (!in_array($mimeType, $allowedMimes)) {
                     continue; // Saltar archivos no válidos
@@ -62,7 +75,7 @@ class TicketController extends Controller
             }
         }
 
-        return response()->json($ticket, 201);
+        return response()->json($ticket->load(['user', 'device', 'files']), 201);
     }
 
     public function show(Ticket $ticket): JsonResponse
@@ -97,5 +110,47 @@ class TicketController extends Controller
         $ticket->delete();
 
         return response()->json(['message' => 'Ticket deleted successfully']);
+    }
+    public function comments(Ticket $ticket): JsonResponse
+    {
+        return response()->json($ticket->comments()->with('user')->get());
+    }
+
+    public function addComment(Request $request, Ticket $ticket): JsonResponse
+    {
+        $validated = $request->validate([
+            'user_id' => ['required', 'exists:users,id'],
+            'comment' => ['required', 'string'],
+        ]);
+        $comment = Comment::create(
+            [
+                'ticket_id' => $ticket->id,
+                'user_id' => $validated['user_id'],
+                'comment' => $validated['comment'],
+            ]
+        );
+        return response()->json($comment->load('user'), 201);
+    }
+    public function updateStatus(Request $request, Ticket $ticket): JsonResponse
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'integer', 'max:10'],
+        ]);
+
+        $ticket->update(['status' => $validated['status']]);
+
+        return response()->json($ticket->load(['user', 'device', 'files']));
+    }   
+    public function assignTicket(Request $request, Ticket $ticket): JsonResponse
+    {
+        $validated = $request->validate([
+            'assigned_user_id' => ['required', 'integer'],
+        ]);
+    
+        $ticket->status = 3; //en espera
+        $ticket->assigned_user_id = $validated['assigned_user_id'];
+        $ticket->save();
+
+        return response()->json($ticket);
     }
 }

@@ -14,7 +14,12 @@ return new class extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->string('detail',255)->nullable();
-            $table->string('type');
+            
+            $table->foreignId('type_device_id')
+              ->constrained('type_devices')
+              ->onDelete('cascade');
+
+
             $table->string('brand');
             $table->string('model');
             $table->tinyInteger('status')->default(1);
