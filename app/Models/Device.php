@@ -12,6 +12,7 @@ class Device extends Model
     protected $fillable = [
         'type_device_id',
         'brand',
+        'code',
         'model',
         'status',
         'assigned_to',

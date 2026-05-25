@@ -18,8 +18,7 @@ return new class extends Migration
             $table->foreignId('type_device_id')
               ->constrained('type_devices')
               ->onDelete('cascade');
-
-
+            $table->string('code',100);
             $table->string('brand');
             $table->string('model');
             $table->tinyInteger('status')->default(1);

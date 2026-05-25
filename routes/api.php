@@ -1,12 +1,16 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TypeDeviceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [UserController::class, 'login']);
+Route::get('dashboard', [DashboardController::class, 'index']);
+
 
 Route::get('users/search', [UserController::class, 'search']);
 Route::get('users', [UserController::class, 'index']);
@@ -52,4 +56,6 @@ Route::post('type-devices', [TypeDeviceController::class, 'store']);
 Route::delete('type-devices/{id}', [TypeDeviceController::class, 'destroy']);
 Route::patch('type-devices/{id}', [TypeDeviceController::class, 'update']);
 
+Route::get('users/{user}/tasks', [TaskController::class, 'index']);
+Route::get('users/{user}/tasks/historial', [TaskController::class, 'historial']);
 

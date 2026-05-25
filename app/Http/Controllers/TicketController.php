@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Ticket;
 use App\Models\TicketFile;
+use App\Models\TicketLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -135,10 +136,18 @@ class TicketController extends Controller
     {
         $validated = $request->validate([
             'status' => ['required', 'integer', 'max:10'],
+            'diagnostic' => ['nullable','string','max:255']
         ]);
-
         $ticket->update(['status' => $validated['status']]);
 
+        if (!empty($validated['diagnostic'])) {
+            TicketLog::create([
+                'ticket_id' => $ticket->id,
+                'user_id' => $ticket->assigned_user_id,
+                'message' => $validated['diagnostic']
+            ]);
+            return response()->json($ticket->load(['user', 'device', 'files','logs']));
+        }
         return response()->json($ticket->load(['user', 'device', 'files']));
     }   
     public function assignTicket(Request $request, Ticket $ticket): JsonResponse
